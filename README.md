@@ -47,6 +47,10 @@ In the volumes section, this line tells Docker to mount the bucket-2 mount point
 
 In the Immich External Library Setup, I added /mnt/bucket-2 as a scan path to find new photos.
 
+## Tailscale
+
+I use [Tailscale](https://tailscale.com/) for my personal networking needs. This means there are no Security Groups needed for my devices to gain access to the Immich Server. I even renamed the tailscale network name of the device to Immich, so connecting to the server is by simple name.
+
 ## Next Steps
 - I'm considering running the EC2 instance as spot so I can pay less
 - I also need to monitor the S3 request costs to see if this style deployment makes sense
