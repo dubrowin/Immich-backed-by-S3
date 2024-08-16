@@ -1,5 +1,6 @@
 # Immich-backed-by-S3
 How I built an Immich server backed by S3
+![Immich drawio](https://github.com/user-attachments/assets/5da32b14-4d30-4730-abe9-348c3bf002c7)
 
 ## What is Immich
 
