@@ -28,7 +28,19 @@ user_allow_other
 
 And then, when using the ```mount-s3``` command (the command created from mountpoint-s3), I needed to include ```--allow-root``` since Docker is running as root.
 
-I even created a a startup script, which is still a work in progress.
+**Experimental**
+*I'm still testing and verifying this works as expected*
+
+I even created a a [startup script](https://github.com/dubrowin/Immich-backed-by-S3/blob/main/mount-s3), which is still a work in progress.
+- you will need to update the bucket-1 and/or bucket-2
+- if you are not using Amazon Linux, you may need to update the USER that the process runs as
+- you may desire a different directory for your mount points
+- In order for this to start before docker (needed if Immich on Docker will be the R/W store), I needed to update ```/lib/systemd/system/docker.service```
+  - to add ```mount-s3``` to the end of the ```After``` and ```Requires``` lines.
+- I placed the ```mount-s3``` file in ```/etc/init.d/``` made sure it's executable
+  - ```chmod +x /etc/init.d/mount-s3```
+- And enable the script
+  - ```sudo systemctl enable mount-s3```
 
 
 ### Deploy Immich
