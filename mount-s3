@@ -1,0 +1,98 @@
+#!/bin/bash
+
+################################
+## Script to mount s3 buckets
+## 
+## 
+## Created: Aug 15, 2024
+## By: Shlomo Dubrowin
+################################
+
+### BEGIN INIT INFO
+# Provides:          mount-s3
+# required-Start:      
+# required-Stop:       
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/stop mount-s3
+# Description:       Start/stop mount-s3
+### END INIT INFO
+
+
+################################
+## Variables
+################################
+USAGE="\n   usage: $0 <start|stop|restart|status|help>\n"
+BUCKET="bucket-1 bucket-1"
+TARGET="/home/ec2-user/mnt/"
+USER="ec2-user"
+
+################################
+## Functions
+################################
+function help {
+        echo -e $USAGE
+	exit
+        }
+
+function start {
+	echo "Starting mount-s3"
+	for MOUNT in $BUCKET; do
+		mkdir -p ${TARGET}${MOUNT}
+		chown ${USER}:${USER} ${TARGET}${MOUNT}
+		su $USER -c "/usr/bin/mount-s3 $MOUNT ${TARGET}${MOUNT} --allow-root" 
+	done
+}
+
+function stop {
+	echo "Stopping mount-s3"
+	PID=`ps -eaf | grep mount-s3 | grep -v "grep\|status" | grep -v $$ | awk '{print $2}'`
+	kill -TERM $PID && exit 0 || exit 1
+}
+
+function status {
+	echo "Status mount-s3"
+	ps -eaf | grep mount-s3 | grep -v "grep\|status" | grep -v $$
+	PIDS=`ps -eaf | grep mount-s3 | grep -v "grep\|status" | grep -v $$ | wc -l`
+	TARGETPIDS=`echo $BUCKET | wc -w`
+	if [ "$PIDS" != "$TARGETPIDS" ]; then
+		echo "We may have a problem $PIDS pids detected for $TARGETPIDS targets"
+		exit 1
+	fi
+}
+
+################################
+## Command Line Options
+################################
+
+if [ `id -u` != "0" ]; then
+        echo "Must be run as root"
+fi
+
+if [ -z "$1" ]; then
+	help
+fi
+
+if [ -z != "$1" ]; then
+        while [ "$1" != "" ]; do
+        case $1 in
+                start )
+			start
+                        ;;
+                stop )
+			stop
+                        ;;
+                status )
+			status
+                        ;;
+                restart )
+			stop
+			start
+			;;
+                * )
+                        help
+                        ;;
+        esac
+        shift
+        done
+fi
