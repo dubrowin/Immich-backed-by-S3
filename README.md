@@ -42,6 +42,7 @@ I even created a a [startup script](https://github.com/dubrowin/Immich-backed-by
 - And enable the script
   - ```sudo systemctl enable mount-s3```
 
+***TODO*** mount-s3 is still starting after the docker containers. Therefore, on reboot, I need to stop the docker containers, run the mount-s3, and then restart the docker containers. Need to dive more into the systemd startup order.
 
 ### Deploy Immich
 
@@ -59,6 +60,10 @@ This tells Immich to store all uploads into that directory which is mounted by m
 In the volumes section, this line tells Docker to mount the bucket-2 mount point for mount-s3 as /mnt/bucket-2 and to make it read-only
 
 In the Immich External Library Setup, I added /mnt/bucket-2 as a scan path to find new photos.
+
+#### Library Scanning
+
+In order to support the library scanning more efficiently, I upgraded the instance from t4g.small to c6g.xlarge for a few hours. While the instance costs more, once the scanning is complete, I'll shutdown and resize back dwon tot he t4g.small to support the app and website usages.
 
 ## Tailscale
 
