@@ -63,7 +63,7 @@ In the Immich External Library Setup, I added /mnt/bucket-2 as a scan path to fi
 
 #### Library Scanning
 
-In order to support the library scanning more efficiently, I upgraded the instance from t4g.small to c6g.xlarge for a few hours. While the instance costs more, once the scanning is complete, I'll shutdown and resize back dwon tot he t4g.small to support the app and website usages.
+In order to support the library scanning more efficiently, I upgraded the instance from ```t4g.small``` to ```c6g.xlarge``` for a few hours. While the instance costs more, once the scanning is complete, I'll shutdown and resize back dwon tot he ```t4g.small``` to support the app and website usages.
 
 ## Tailscale
 
