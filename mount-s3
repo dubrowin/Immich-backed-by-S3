@@ -23,7 +23,7 @@
 ## Variables
 ################################
 USAGE="\n   usage: $0 <start|stop|restart|status|help>\n"
-BUCKET="bucket-1 bucket-1"
+BUCKET="bucket-1 bucket-2"
 TARGET="/home/ec2-user/mnt/"
 USER="ec2-user"
 
@@ -37,11 +37,27 @@ function help {
 
 function start {
 	echo "Starting mount-s3"
+
+	echo "Stopping Docker Containers"
+	cd /home/ec2-user/immich-app && /usr/local/bin/docker-compose stop && cd -
+
 	for MOUNT in $BUCKET; do
-		mkdir -p ${TARGET}${MOUNT}
-		chown ${USER}:${USER} ${TARGET}${MOUNT}
-		su $USER -c "/usr/bin/mount-s3 $MOUNT ${TARGET}${MOUNT} --allow-root" 
+		STAT=`ps -eaf | grep mount-s3 | grep -v "grep\|status" | grep -v $$ | grep -c $MOUNT`
+		if [ "$STAT" != "0" ]; then
+			echo "$MOUNT is already Mounted, skipping mount"
+		else
+			echo "Trying to create directory ${TARGET}${MOUNT}"
+			su $USER -c "mkdir -p ${TARGET}${MOUNT}"
+			echo "Clearing any possible cruft from ${TARGET}${MOUNT}"
+			rm -rf ${TARGET}${MOUNT}/*
+			chown ${USER}:${USER} ${TARGET}${MOUNT}
+			su $USER -c "/usr/bin/mount-s3 $MOUNT ${TARGET}${MOUNT} --allow-root" 
+		fi
 	done
+
+	echo "Restarting Docker Containers"
+
+	cd /home/ec2-user/immich-app && /usr/local/bin/docker-compose up -d && cd -
 }
 
 function stop {
