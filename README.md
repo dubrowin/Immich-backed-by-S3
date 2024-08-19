@@ -43,6 +43,7 @@ I even created a a [startup script](https://github.com/dubrowin/Immich-backed-by
   - ```sudo systemctl enable mount-s3```
 
 ***TODO*** mount-s3 is still starting after the docker containers. Therefore, on reboot, I need to stop the docker containers, run the mount-s3, and then restart the docker containers. Need to dive more into the systemd startup order.
+***Update*** The latest version of my ```mount-s3``` includes a stop of the docker containers before the S3 mounts and then a start of the docker containers after the S3 mounts. This isn't pretty, but it's working.
 
 ### Deploy Immich
 
@@ -71,4 +72,5 @@ I use [Tailscale](https://tailscale.com/) for my personal networking needs. This
 
 ## Next Steps
 - I'm considering running the EC2 instance as spot so I can pay less
+  - I've started up my t4g.small via a spot request from an AMI I created from one of the previous instances. I'm using a persistent spot request so if the instance is reclaimed by AWS, it should restart another instance with the same disks. I'm also using an interruption behavior of stop. I don't expect such a small instance to be reclaimed by AWS, so I expect this should work. In any case, I have a daily backup of the instance to be safe for the containers. The photo data is all stored on S3.
 - I also need to monitor the S3 request costs to see if this style deployment makes sense
