@@ -74,7 +74,8 @@ I use [Tailscale](https://tailscale.com/) for my personal networking needs. This
 - I'm considering running the EC2 instance as spot so I can pay less
   - I've started up my t4g.small via a spot request from an AMI I created from one of the previous instances. I'm using a persistent spot request so if the instance is reclaimed by AWS, it should restart another instance with the same disks. I'm also using an interruption behavior of stop. I don't expect such a small instance to be reclaimed by AWS, so I expect this should work. In any case, I have a daily backup of the instance to be safe for the containers. The photo data is all stored on S3.
 - I also need to monitor the S3 request costs to see if this style deployment makes sense
-  - So far, the major scan cost nearly $11 in S3 requests. There are 76k objects for a size of around 63GB
-  - The next day's daily scan cost another nearly $6.50.
+  - So far, the major scan cost nearly $11 in S3 requests (3.7M requests). There are 76k objects for a size of around 63GB
+  - The next day's daily scan cost another nearly $6.50 (2.1M requests).
+    - In addition to S3, because of the requests, there as an additional cost in CloudTrail of $6.80 ($4.23 day 1 and $2.57 day 2).
   - At this point, I have reduced the scan to monthly to save these costs.
   - I need to determine if the costs make sense to continue the project or look for alternatives.
