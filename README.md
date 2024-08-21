@@ -8,6 +8,8 @@ How I built an Immich server backed by S3
 
 ## Why Back it by S3
 
+**NOTE:** I found it too expensive in S3 requests and CloudTrail data recordings to use S3 as the backend. This project works, but the costs make it unfeasible. I am now using a larger EBS volume and hourly syncing of S3 bucket data to the local disk.
+
 S3 is the cheapest and safest storage available on AWS. If I wanted to run the Immich server on EC2 and pay for the storage, I would need around 200GB minimum and that would cost me just in GP3 storage without snapsots $16 per month (in the Ohio Region). The same storage in S3 Standard Tier costs $4.60. S3 is also multi-AZ with many 9's of redundancy. And I can automate the simple addition of files (S3 objects) via other scripts.
 
 ## Steps for my build
